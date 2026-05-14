@@ -92,6 +92,10 @@ def generate_answer(query):
     return {
         "query": query,
         "answer": response.content,
+        "contexts": [
+            doc["text"]
+            for doc in reranked_docs
+        ],
         "sources": [
             doc["metadata"]["paper_title"]
             for doc in reranked_docs

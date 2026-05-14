@@ -48,3 +48,4 @@ def retrieve_documents(query, top_k=10):
         })
 
     return formatted_results
+
