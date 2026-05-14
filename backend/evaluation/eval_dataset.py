@@ -1,9 +1,5 @@
 eval_data = [
     {
-    "question": "How does Low-Rank Adaptation (LoRA) reduce the number of trainable parameters during fine-tuning?",
-    "ground_truth": "LoRA freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, drastically reducing the parameters that need to be updated."
-  },
-    {
   "question": "I am looking into how to make language models more reliable when they encounter tasks requiring factual precision. Should I focus on changing how the model processes information during its actual deployment, or is it better to modify the underlying structural parameters before it ever runs?",
   "ground_truth": "This query touches on the core tension between inference-time optimization and parameter-driven modifications. To address deployment-time processing, the researcher should look into Retrieval-Augmented Generation frameworks like Self-RAG or CRAG, which dynamically evaluate and fetch facts during inference, or 'LLM in a flash' for runtime memory management. To address structural parameter modifications, they should examine parameter-efficient fine-tuning (PEFT) methods like LoRA and QLoRA, which permanently alter a small subset of structural weights to adapt the model's behavior prior to deployment."
 },
@@ -47,7 +43,10 @@ eval_data = [
     "question": "What is the main technique used in 'LLM in a flash' to efficiently run large language models on devices with limited DRAM?",
     "ground_truth": "The paper stores the model parameters in non-volatile flash memory (which is larger but slower) and dynamically loads them into DRAM only when needed, minimizing data transfer using techniques like windowing and sparsity-aware activation."
   },
-
+  {
+    "question": "How does Low-Rank Adaptation (LoRA) reduce the number of trainable parameters during fine-tuning?",
+    "ground_truth": "LoRA freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, drastically reducing the parameters that need to be updated."
+  },
   {
     "question": "What is the 'Lost in the Middle' phenomenon in long-context language models?",
     "ground_truth": "The 'Lost in the Middle' phenomenon is the tendency of language models to achieve the highest performance when relevant information is located at the absolute beginning or the end of the input context, while performance significantly degrades when the relevant data is placed in the middle."

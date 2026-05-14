@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from backend.retrieval.retrieve import retrieve_documents
+from backend.retrieval.retrieve import hybrid_retrieve
 from backend.retrieval.rerank import rerank_documents
 
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -69,16 +69,9 @@ SOURCE {i+1}: {paper_title}
 
 def generate_answer(query):
 
-    retrieved_docs = retrieve_documents(
-        query=query,
-        top_k=10
-    )
+    retrieved_docs = hybrid_retrieve(query=query)
 
-    reranked_docs = rerank_documents(
-        query=query,
-        retrieved_docs=retrieved_docs,
-        top_n=3
-    )
+    reranked_docs = rerank_documents(query=query,retrieved_docs=retrieved_docs,top_n=3)
 
     context = build_context(reranked_docs)
 

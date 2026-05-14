@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import cohere
 
-from backend.retrieval.retrieve import retrieve_documents
+from backend.retrieval.retrieve import hybrid_retrieve
 
 load_dotenv()
 COHERE_API_KEY = os.getenv("COHERE_API_KEY")
@@ -43,10 +43,7 @@ if __name__ == "__main__":
 
     query = "How do modern architectures improve transformer efficiency?"
 
-    retrieved_docs = retrieve_documents(
-        query=query,
-        top_k=10
-    )
+    retrieved_docs = hybrid_retrieve(query=query)
 
     reranked_docs = rerank_documents(
         query=query,

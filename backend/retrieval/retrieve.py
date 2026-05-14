@@ -2,6 +2,10 @@ from pathlib import Path
 import chromadb
 from sentence_transformers import SentenceTransformer
 
+from langchain_community.retrievers import BM25Retriever
+from langchain_core.documents import Document
+
+
 BASE_DIR = Path(__file__).resolve().parents[1]
 CHROMA_DIR = BASE_DIR / "chroma_db"
 
@@ -20,10 +24,22 @@ collection = client.get_collection(
 )
 print("Connected to ChromaDB.\n")
 
-#query = "What is Self-RAG?"
-#print(f"Query: {query}\n")
+all_docs_data=collection.get()
+all_docs=all_docs_data["documents"]
+all_metadata=all_docs_data["metadatas"]
+documents= []
+for text,mt in zip(all_docs, all_metadata):
+    documents.append(
+        Document(
+            page_content=text,
+            metadata=mt
+        )
+    )
+retriever=BM25Retriever.from_documents(documents)
+retriever.k=6
 
-def retrieve_documents(query, top_k=10):
+
+def dense_retrieve_documents(query, top_k=10):
 
     query_embedding = embedding_model.encode(query)
 
@@ -48,4 +64,36 @@ def retrieve_documents(query, top_k=10):
         })
 
     return formatted_results
+
+def bm25_retrieve(query, top_k=6):
+    retriever.k=top_k
+    bm25_docs=retriever.invoke(query)
+
+    formatted_results=[]
+    for doc in bm25_docs:
+        formatted_results.append({
+            "text":doc.page_content,
+            "metadata":doc.metadata
+        })
+    return formatted_results
+
+def hybrid_retrieve(query):
+    bm25=bm25_retrieve(query, top_k=6)
+    dense=dense_retrieve_documents(query, top_k=10)
+    combined=bm25+dense
+
+    seen=set()
+    unique_res=[]
+    for doc in combined:
+        if doc["text"] not in seen:
+            seen.add(doc["text"])
+            unique_res.append(doc)
+
+    return unique_res
+
+#query = "What is Self-RAG?"
+#ans=hybrid_retrieve(query)
+
+#print(f"Query: {query}\n")
+#print(f"Answer:{ans}")
 
