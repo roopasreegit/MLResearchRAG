@@ -91,9 +91,12 @@ def hybrid_retrieve(query):
 
     return unique_res
 
-#query = "What is Self-RAG?"
-#ans=hybrid_retrieve(query)
+#testing
+if __name__=="__main__":
 
-#print(f"Query: {query}\n")
-#print(f"Answer:{ans}")
+    query = "What is Self-RAG?"
+    ans=hybrid_retrieve(query)
+
+    print(f"Query: {query}\n")
+    print(f"Answer:{ans}")
 

@@ -9,7 +9,7 @@ COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 
 co = cohere.ClientV2(api_key=COHERE_API_KEY)
 
-def rerank_documents(query, retrieved_docs, top_n=3):
+def rerank_documents(query, retrieved_docs, top_n=5):
 
     documents = [
         doc["text"]
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     reranked_docs = rerank_documents(
         query=query,
         retrieved_docs=retrieved_docs,
-        top_n=3
+        top_n=5
     )
 
     print("\nTOP RERANKED RESULTS\n")

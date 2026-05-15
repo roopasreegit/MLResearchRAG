@@ -14,6 +14,7 @@ from deepeval.metrics import (
 
 from deepeval.models import GeminiModel
 
+from backend.retrieval.query_rewrite import rewrite_query
 from backend.evaluation.eval_dataset import eval_data
 from backend.generation.generate import generate_answer
 
@@ -31,7 +32,10 @@ for item in eval_data[:1]:
     question = item["question"]
     ground_truth = item["ground_truth"]
 
-    result = generate_answer(question)
+    initial_query = question
+    query=rewrite_query(initial_query)
+
+    result = generate_answer(query)
 
     time.sleep(25)
 

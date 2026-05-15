@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from backend.retrieval.retrieve import hybrid_retrieve
 from backend.retrieval.rerank import rerank_documents
-
+from backend.retrieval.query_rewrite import rewrite_query
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 
@@ -12,15 +12,17 @@ GEMINI_API_KEY=os.getenv("GEMINI_API_KEY")
 llm= ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     google_api_key=GEMINI_API_KEY,
-    temperature = 0.3
+    temperature = 0.5
 )
 
 prompt_template = PromptTemplate(
     input_variables=["context", "query"],
     template ="""
-You are an AI research assistant.
+You are an AI Research Assistant specialised in Gen AI, LLMs, RAG and
+fine-tuning based state of the art research papers.
 
-Answer the user's question ONLY using the provided context.
+
+Answer the user's question using the provided context in an information rich manner with technical details.
 
 If the answer is not present in the context,
 say:
@@ -28,7 +30,7 @@ say:
 
 Be concise, accurate, and grounded.
 
-Also mention which paper the answer came from when possible.
+Also mention which paper the answer came from.
 
 ==================== CONTEXT ====================
 
@@ -71,7 +73,7 @@ def generate_answer(query):
 
     retrieved_docs = hybrid_retrieve(query=query)
 
-    reranked_docs = rerank_documents(query=query,retrieved_docs=retrieved_docs,top_n=3)
+    reranked_docs = rerank_documents(query=query,retrieved_docs=retrieved_docs,top_n=5)
 
     context = build_context(reranked_docs)
 
@@ -95,12 +97,17 @@ def generate_answer(query):
         ]
     }
 
+def rewrite_before_gen(query):
+    q = rewrite_query(query)
+    generate_answer(q)
+
 
 #testing
 
 if __name__ == "__main__":
 
-    query = "How does Self-RAG improve factuality?"
+    initial_query = "I am looking into how to make language models more reliable when they encounter tasks requiring factual precision. Should I focus on changing how the model processes information during its actual deployment, or is it better to modify the underlying structural parameters before it ever runs?"
+    query=rewrite_query(initial_query)
 
     result = generate_answer(query)
 
