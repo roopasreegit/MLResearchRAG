@@ -4,7 +4,7 @@ from sentence_transformers import SentenceTransformer
 
 from langchain_community.retrievers import BM25Retriever
 from langchain_core.documents import Document
-
+import streamlit as st
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 CHROMA_DIR = BASE_DIR / "chroma_db"
@@ -14,29 +14,33 @@ embedding_model = SentenceTransformer(
 )
 
 
+@st.cache_resource
+def load_chroma_collection():
+    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+    collection = client.get_collection(name="research_papers")
+    all_docs_data=collection.get()
+    return collection, all_docs_data
 
-client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+collection, all_docs_data=load_chroma_collection()
 
-print(client.list_collections())
-
-collection = client.get_collection(
-    name="research_papers"
-)
-print("Connected to ChromaDB.\n")
-
-all_docs_data=collection.get()
 all_docs=all_docs_data["documents"]
 all_metadata=all_docs_data["metadatas"]
-documents= []
-for text,mt in zip(all_docs, all_metadata):
-    documents.append(
-        Document(
+
+
+@st.cache_resource
+def get_bm25_ret():
+    documents= []
+    for text,mt in zip(all_docs, all_metadata):
+        documents.append(Document(
             page_content=text,
-            metadata=mt
+            metadata=mt)
         )
-    )
-retriever=BM25Retriever.from_documents(documents)
-retriever.k=6
+    retriever = BM25Retriever.from_documents(documents)
+    retriever.k = 6  
+    return retriever
+
+retriever=get_bm25_ret()
+
 
 
 def dense_retrieve_documents(query, top_k=10):
@@ -53,15 +57,9 @@ def dense_retrieve_documents(query, top_k=10):
 
     formatted_results = []
 
-    for doc, metadata in zip(
-        retrieved_docs,
-        retrieved_metadata
-    ):
+    for doc, metadata in zip(retrieved_docs, retrieved_metadata):
 
-        formatted_results.append({
-            "text": doc,
-            "metadata": metadata
-        })
+        formatted_results.append({"text": doc, "metadata": metadata})
 
     return formatted_results
 
@@ -90,6 +88,12 @@ def hybrid_retrieve(query):
             unique_res.append(doc)
 
     return unique_res
+
+def get_all_titles():
+    papers=set()
+    for metadata in all_metadata:
+        papers.add(metadata["paper_title"])
+    return sorted(list(papers))
 
 #testing
 if __name__=="__main__":

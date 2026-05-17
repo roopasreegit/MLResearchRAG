@@ -98,8 +98,10 @@ def generate_answer(query):
     }
 
 def rewrite_before_gen(query):
+    print("Original Query:", query)
     q = rewrite_query(query)
-    generate_answer(q)
+    print("Rewritten Query", q)
+    return generate_answer(q)
 
 
 #testing
