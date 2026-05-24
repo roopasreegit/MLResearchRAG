@@ -3,9 +3,9 @@
 # The Problem
 Research papers are everywhere, but finding answers across multiple papers is painful. You either:
 
-*Spend hours manually reading through PDFs (slow)
-*Use keyword search and get irrelevant results (noisy)
-*Copy paste text into ChatGPT and lose source attribution (dangerous)
+* Spend hours manually reading through PDFs (slow)
+* Use keyword search and get irrelevant results (noisy)
+* Copy paste text into ChatGPT and lose source attribution (dangerous)
 
 PaperPro solves this. It understands research context semantically, finds the most relevant papers, and generates answers grounded in real citations.
 
