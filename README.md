@@ -247,28 +247,18 @@ Measures whether the retrieval system fetched sufficient relevant information.
 ---
 
 # Example Query
+<img width="1781" height="870" alt="Screenshot 2026-05-17 084610" src="https://github.com/user-attachments/assets/d5ee70d0-ddf3-480f-a704-c22176552210" />
 
-```text
-What are the differences between parameter-efficient fine tuning and in-context learning?
-```
 
-Example Output:
-
-* synthesized explanation
-* contextual comparisons
-* source-aware citations
-* grounded technical answer
-
----
 
 # Installation
 
 # 1. Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/PaperPro.git
+git clone https://github.com/yourusername/MLResearchRAG.git
 
-cd PaperPro
+cd MLResearchRAG
 ```
 
 ---
@@ -376,4 +366,6 @@ MIT License
 
 Roopasree
 Computer Science Engineering, NIT Trichy
+
+Made with <3 for Researchers
 
