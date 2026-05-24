@@ -1,4 +1,4 @@
-## PaperPro - AI Powered Research Papers Query Engine
+# PaperPro - AI Powered Research Papers Query Engine
 (Shhh RAG is the secret of my energy)
 
 #The Problem
